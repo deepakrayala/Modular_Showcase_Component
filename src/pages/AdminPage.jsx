@@ -35,12 +35,18 @@ export default function AdminPage() {
     try {
       // Fetch users (admin-only endpoint)
       const usersRes = await authFetch(`${GATEWAY_URL}/api/auth/users`);
-      if (usersRes.ok) {
-        const data = await usersRes.json();
-        setUsers(data.users || []);
-      } else {
-        setError("Failed to fetch users");
-      }
+
+console.log("Users Status:", usersRes.status);
+
+if (usersRes.ok) {
+  const data = await usersRes.json();
+  console.log("Users Data:", data);
+  setUsers(data.users || data);
+} else {
+  const errorText = await usersRes.text();
+  console.log("Users Error:", errorText);
+  setError(`Failed to fetch users (${usersRes.status})`);
+}
 
       // Fetch components
       const compRes = await fetch(`${GATEWAY_URL}/api/components`);

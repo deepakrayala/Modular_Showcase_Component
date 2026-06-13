@@ -142,14 +142,23 @@ export const AuthProvider = ({ children }) => {
 
   // AUTH FETCH — helper for authenticated requests
   const authFetch = async (url, options = {}) => {
-    const headers = {
-      ...options.headers,
-    };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-    return fetch(url, { ...options, headers });
+  const headers = {
+    ...options.headers,
   };
+
+  const currentToken = localStorage.getItem("token");
+
+  console.log("TOKEN SENT:", currentToken);
+
+  if (currentToken) {
+    headers["Authorization"] = `Bearer ${currentToken}`;
+  }
+
+  return fetch(url, {
+    ...options,
+    headers,
+  });
+};
 
   return (
     <AuthContext.Provider
