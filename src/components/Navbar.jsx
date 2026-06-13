@@ -37,12 +37,22 @@ export default function Navbar() {
               Components
             </Link>
             {(user.roleId === 2 || user.roleId === 3) && (
-              <Link
-                to="/admin"
-                className={`nav-link ${isActive("/admin") ? "active" : ""}`}
-              >
-                Admin
-              </Link>
+              <>
+                <Link
+                  to="/admin"
+                  className={`nav-link ${isActive("/admin") ? "active" : ""}`}
+                >
+                  Admin
+                </Link>
+                <Link
+                  to="/admin/add-component"
+                  className={`nav-link nav-link-add ${
+                    isActive("/admin/add-component") ? "active" : ""
+                  }`}
+                >
+                  + Add Component
+                </Link>
+              </>
             )}
           </div>
         )}

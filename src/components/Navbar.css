@@ -58,6 +58,26 @@
   background: #eef2ff;
 }
 
+/* Add Component nav link — prominent for admins */
+.nav-link-add {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff !important;
+  padding: 6px 16px;
+  font-weight: 600;
+}
+
+.nav-link-add:hover {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.nav-link-add.active {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
 .navbar-right {
   margin-left: auto;
   display: flex;
