@@ -29,6 +29,7 @@ app.get('/api/health', (req, res) => {
 // Routes
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/mongo/components', require('./routes/components'));
 
 // Connect to MongoDB and start server
 mongoose

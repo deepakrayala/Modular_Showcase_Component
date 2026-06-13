@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 # Configuration
 # ---------------------------------------------------------------------------
 SPRING_BOOT_URL = "http://localhost:9090"
+NODE_BACKEND_URL = "http://localhost:5000"
 JWT_SECRET = "MySuperSecretKeyForJWTTokenGeneration2026SpringBootApp!@#$"
 JWT_ALGORITHM = "HS384"
 
@@ -38,10 +39,15 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# HTTP Client
+# HTTP Clients
 # ---------------------------------------------------------------------------
-client = httpx.AsyncClient(
+spring_client = httpx.AsyncClient(
     base_url=SPRING_BOOT_URL,
+    timeout=30.0
+)
+
+node_client = httpx.AsyncClient(
+    base_url=NODE_BACKEND_URL,
     timeout=30.0
 )
 
@@ -91,6 +97,7 @@ async def proxy_request(
     path: str,
     request: Request,
     auth_required: bool = False,
+    client: httpx.AsyncClient | None = None,
 ) -> JSONResponse:
     print("\n===== REQUEST DEBUG =====")
     print("PATH:", path)
@@ -125,8 +132,11 @@ async def proxy_request(
     if method in ["POST", "PUT", "PATCH"]:
         body = await request.body()
 
+    # Use provided client or default to Spring Boot client
+    http_client = client or spring_client
+
     try:
-        response = await client.request(
+        response = await http_client.request(
             method=method,
             url=path,
             headers=headers,
@@ -174,21 +184,25 @@ def root():
 @app.get("/health")
 async def health():
 
-    backend_ok = False
+    spring_ok = False
+    node_ok = False
 
     try:
-        r = await client.get("/api/auth/health")
-        backend_ok = r.status_code == 200
+        r = await spring_client.get("/api/auth/health")
+        spring_ok = r.status_code == 200
+    except Exception:
+        pass
+
+    try:
+        r = await node_client.get("/api/health")
+        node_ok = r.status_code == 200
     except Exception:
         pass
 
     return {
         "gateway": "ok",
-        "spring_boot": (
-            "ok"
-            if backend_ok
-            else "unreachable"
-        ),
+        "spring_boot": "ok" if spring_ok else "unreachable",
+        "node_backend": "ok" if node_ok else "unreachable",
         "timestamp": __import__(
             "datetime"
         ).datetime.now().isoformat(),
@@ -309,6 +323,71 @@ async def delete_component(
 
 
 # ---------------------------------------------------------------------------
+# MongoDB Component APIs (proxied to Node.js backend → MongoDB)
+# ---------------------------------------------------------------------------
+@app.get("/api/mongo/components")
+async def get_mongo_components(request: Request):
+    return await proxy_request(
+        "GET",
+        "/api/mongo/components",
+        request,
+        client=node_client,
+    )
+
+
+@app.get("/api/mongo/components/{component_id}")
+async def get_mongo_component(
+    component_id: str,
+    request: Request,
+):
+    return await proxy_request(
+        "GET",
+        f"/api/mongo/components/{component_id}",
+        request,
+        client=node_client,
+    )
+
+
+@app.post("/api/mongo/components")
+async def create_mongo_component(request: Request):
+    return await proxy_request(
+        "POST",
+        "/api/mongo/components",
+        request,
+        auth_required=True,
+        client=node_client,
+    )
+
+
+@app.put("/api/mongo/components/{component_id}")
+async def update_mongo_component(
+    component_id: str,
+    request: Request,
+):
+    return await proxy_request(
+        "PUT",
+        f"/api/mongo/components/{component_id}",
+        request,
+        auth_required=True,
+        client=node_client,
+    )
+
+
+@app.delete("/api/mongo/components/{component_id}")
+async def delete_mongo_component(
+    component_id: str,
+    request: Request,
+):
+    return await proxy_request(
+        "DELETE",
+        f"/api/mongo/components/{component_id}",
+        request,
+        auth_required=True,
+        client=node_client,
+    )
+
+
+# ---------------------------------------------------------------------------
 # Legacy Endpoint
 # ---------------------------------------------------------------------------
 @app.get("/components")
@@ -342,4 +421,5 @@ async def debug_token(request: Request):
 # ---------------------------------------------------------------------------
 @app.on_event("shutdown")
 async def shutdown():
-    await client.aclose()
+    await spring_client.aclose()
+    await node_client.aclose()

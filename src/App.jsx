@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import ComponentsList from "./pages/ComponentsList";
 import ComponentDetail from "./pages/ComponentDetail";
 import AdminPage from "./pages/AdminPage";
+import AdminAddComponent from "./pages/AdminAddComponent";
 import "./App.css";
 
 function AppLayout({ children }) {
@@ -69,10 +70,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/admin/add-component"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <AdminAddComponent />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
 
           {/* Default redirect */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
     </HashRouter>

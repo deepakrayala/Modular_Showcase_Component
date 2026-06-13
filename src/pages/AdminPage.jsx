@@ -233,6 +233,9 @@ if (usersRes.ok) {
       <div className="admin-section">
         <h2>Quick Actions</h2>
         <div className="admin-actions">
+          <button className="admin-action-btn" onClick={() => navigate("/admin/add-component")}>
+            + Add New Component
+          </button>
           <button className="admin-action-btn" onClick={fetchData}>Refresh All Data</button>
           <button className="admin-action-btn secondary" onClick={() => window.open(`${GATEWAY_URL}/health`, "_blank")}>
             Check Gateway Health
