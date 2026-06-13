@@ -61,6 +61,16 @@ function App() {
             }
           />
           <Route
+            path="/components/mongo/:mongoId"
+            element={
+              <ProtectedRoute>
+                <AppLayout>
+                  <ComponentDetail />
+                </AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin"
             element={
               <ProtectedRoute>

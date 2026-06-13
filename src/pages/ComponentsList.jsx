@@ -272,8 +272,7 @@ export default function ComponentsList() {
                 }`}
                 onClick={() => {
                   if (comp._source === "mongodb") {
-                    // For now, just show the code snippet in a detail view
-                    navigate(`/components?selected=${comp._mongoId}`, {
+                    navigate(`/components/mongo/${comp._mongoId}`, {
                       state: { mongoComponent: comp },
                     });
                   } else {

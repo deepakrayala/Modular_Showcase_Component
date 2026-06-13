@@ -28,6 +28,18 @@
 
 .detail-breadcrumb .current {
   color: #6b7280;
+
+.mongo-source-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: #10b981;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 }
 
 .detail-header {
