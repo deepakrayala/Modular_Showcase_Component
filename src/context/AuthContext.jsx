@@ -14,33 +14,49 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
 
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [serverOnline, setServerOnline] = useState(null);
+const [user, setUser] = useState(null);
+const [token, setToken] = useState(localStorage.getItem("token"));
+const [serverOnline, setServerOnline] = useState(null);
+const [loading, setLoading] = useState(true);
 
   // Restore user from token on mount
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
+  const storedToken = localStorage.getItem("token");
+
+  if (storedToken) {
+    try {
+      const payload = JSON.parse(
+        atob(storedToken.split(".")[1])
+      );
+
+      console.log("RESTORED JWT:", payload);
+
       setToken(storedToken);
-      // Decode JWT payload to restore user info
-      try {
-        const payload = JSON.parse(atob(storedToken.split('.')[1]));
-        setUser({
-          id: payload.userId,
-          email: payload.sub,
-          roleName: payload.role,
-          roleId: payload.role === 'ADMIN' ? 2 : 1,
-          name: localStorage.getItem("userName") || "User",
-        });
-      } catch {
-        // Token invalid, clear it
-        localStorage.removeItem("token");
-        setToken(null);
-        setUser(null);
-      }
+
+      setUser({
+        id: payload.userId,
+        email: payload.sub,
+        roleName: payload.role,
+        roleId:
+          payload.role?.toLowerCase() === "admin"
+            ? 2
+            : 1,
+        name: localStorage.getItem("userName") || "User",
+      });
+
+    } catch (e) {
+      console.log("JWT RESTORE ERROR:", e);
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("userName");
+
+      setToken(null);
+      setUser(null);
     }
-  }, []);
+  }
+
+  setLoading(false);
+}, []);
 
   // CHECK GATEWAY SERVER
   const checkServer = async () => {
@@ -165,6 +181,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         token,
+        loading,
         login,
         signup,
         logout,

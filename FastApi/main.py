@@ -15,7 +15,7 @@ from fastapi.responses import JSONResponse
 # ---------------------------------------------------------------------------
 SPRING_BOOT_URL = "http://localhost:9090"
 JWT_SECRET = "MySuperSecretKeyForJWTTokenGeneration2026SpringBootApp!@#$"
-JWT_ALGORITHM = "HS256"
+JWT_ALGORITHM = "HS384"
 
 app = FastAPI(title="Modular Component Showcase - API Gateway")
 
