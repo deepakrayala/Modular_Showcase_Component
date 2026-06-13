@@ -282,6 +282,32 @@
   background: #4f46e5;
 }
 
+/* MongoDB badge on cards */
+.card-mongodb {
+  border-color: #a7f3d0;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+}
+
+.card-mongodb:hover {
+  border-color: #10b981;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.12);
+}
+
+.mongo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: #10b981;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
 @media (max-width: 640px) {
   .list-controls {
     flex-direction: column;

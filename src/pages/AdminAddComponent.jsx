@@ -3,10 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./AdminAddComponent.css";
 
+// Must match the categories in ComponentsList for proper filtering
 const CATEGORIES = [
-  "Buttons", "Cards", "Modals", "Forms", "Tables",
-  "Navigation", "Badges", "Alerts", "Spinners", "Inputs",
-  "Layout", "Typography", "Icons", "Other",
+  "Input", "Layout", "Navigation", "Overlay", "Feedback",
+  "Data Display", "Buttons", "Cards", "Modals", "Forms",
+  "Tables", "Badges", "Alerts", "Spinners", "Typography",
+  "Icons", "Other",
 ];
 
 const STATUS_OPTIONS = ["active", "draft", "deprecated"];
