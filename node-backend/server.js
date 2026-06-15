@@ -49,3 +49,6 @@ mongoose
       console.log(`✓ Node.js Backend running (no DB) on http://localhost:${PORT}`);
     });
   });
+  app.get("/", (req, res) => {
+  res.send("Backend Running");
+});
