@@ -6,7 +6,7 @@ import {
 } from "react";
 
 // All API calls go through the FastAPI Gateway
-const GATEWAY_URL = "http://127.0.0.1:8000";
+const GATEWAY_URL = "https://fastapi-hfk5.onrender.com";
 
 const AuthContext = createContext();
 

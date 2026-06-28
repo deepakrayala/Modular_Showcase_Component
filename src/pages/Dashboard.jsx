@@ -16,8 +16,7 @@ export default function Dashboard() {
   // FASTAPI FETCH
   useEffect(() => {
 
-    fetch("http://127.0.0.1:8000/components")
-
+      fetch("https://fastapi-hfk5.onrender.com/components")
       .then((res) => {
 
         if (!res.ok) {
